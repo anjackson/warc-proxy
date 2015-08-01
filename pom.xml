@@ -1,0 +1,89 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <parent>
+      <groupId>org.sonatype.oss</groupId>
+      <artifactId>oss-parent</artifactId>
+      <version>7</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>net.anjackson</groupId>
+   <artifactId>warc-proxy</artifactId>
+   <version>1.0.0-SNAPSHOT</version>
+   <packaging>jar</packaging>
+   <organization>
+      <name>anjackson.net</name>
+      <url>http://anjackson.net/</url>
+   </organization>
+   <inceptionYear>2014</inceptionYear>
+   <licenses>
+      <license>
+         <name>GNU General Public License Version 2</name>
+         <url>http://www.gnu.org/copyleft/gpl.html</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+   <developers>
+      <developer>
+         <id>anjackson</id>
+         <name>Andrew Jackson</name>
+         <email>anj@anjackson.net</email>
+      </developer>
+   </developers>
+   <issueManagement>
+      <system>GitHub Issues</system>
+      <url>https://github.com/anjackson/warc-proxy/issues</url>
+   </issueManagement>
+   <scm>
+      <connection>scm:git:git@github.com:anjackson/warc-proxy.git</connection>
+      <developerConnection>scm:git:git@github.com:anjackson/warc-proxy.git</developerConnection>
+      <url>git@github.com:anjackson/warc-proxy.git</url>
+   </scm>
+   <properties>
+      <jdk.version>1.6</jdk.version>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <ram>512</ram>
+   </properties>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+               <source>1.6</source>
+               <target>1.6</target>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+   <dependencies>
+    <dependency>
+        <groupId>org.littleshoot</groupId>
+        <artifactId>littleproxy-mitm</artifactId>
+        <version>1.1.0-beta1-SNAPSHOT</version>
+    </dependency>
+<dependency>
+    <groupId>org.jwat</groupId>
+    <artifactId>jwat-warc</artifactId>
+    <version>1.0.3</version>
+</dependency>
+      <dependency>
+         <groupId>org.archive.heritrix</groupId>
+         <artifactId>heritrix-modules</artifactId>
+         <version>3.2.0</version>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-core</artifactId>
+         <version>2.2.2</version>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-databind</artifactId>
+         <version>2.2.2</version>
+      </dependency>
+   </dependencies>
+
+   <repositories>
+
+   </repositories>
+</project>
