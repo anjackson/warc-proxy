@@ -25,6 +25,7 @@ public class AnswerRequestFilter extends HttpFiltersAdapter {
 	public AnswerRequestFilter(HttpRequest originalRequest, byte[] answer) {
 		super(originalRequest, null);
 		this.answer = answer;
+		System.err.println("AnswerRequestFilter!");
 	}
 
 	@Override

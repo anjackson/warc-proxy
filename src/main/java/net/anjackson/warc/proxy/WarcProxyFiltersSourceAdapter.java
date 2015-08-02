@@ -60,14 +60,16 @@ public class WarcProxyFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 		if (pipeline.get("recorder-in") == null) {
 			LOG.info("Adding recorder-in...");
 			recin = new RecordingChannelInboundHandlerAdapter();
-			pipeline.addBefore("decoder", "recorder-in", recin);
+			// pipeline.addBefore("decoder", "recorder-in", recin);
+			pipeline.addFirst("recorder-in", recin);
 		} else {
 			LOG.info("NOT adding recorder-in");
 		}
 		if (pipeline.get("recorder-out") == null) {
 			LOG.info("Adding recorder-out...");
 			recout = new RecordingChannelOutboundHandlerAdapter();
-			pipeline.addBefore("encoder", "recorder-out", recout);
+			// pipeline.addBefore("encoder", "recorder-out", recout);
+			pipeline.addFirst("recorder-out", recout);
 		} else {
 			LOG.info("NOT adding recorder-out");
 		}

@@ -70,7 +70,7 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 	@Override
 	public HttpResponse clientToProxyRequest(HttpObject httpObject) {
 		if (httpObject instanceof HttpRequest) {
-			LOG.error("---\nclientToProxyRequest: "
+			LOG.error("clientToProxyRequest:\n"
 					+ ((HttpRequest) httpObject));
 		}
 		return null;
@@ -79,7 +79,7 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 	@Override
 	public HttpResponse proxyToServerRequest(HttpObject httpObject) {
 		if (httpObject instanceof HttpRequest) {
-			LOG.error("---\nproxyToServerRequest: "
+			LOG.error("proxyToServerRequest:\n"
 					+ ((HttpRequest) httpObject));
 		}
 		return null;
@@ -87,7 +87,7 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpObject serverToProxyResponse(HttpObject httpObject) {
-		LOG.error("---\nserverToProxyResponse: " + httpObject);
+		LOG.error("serverToProxyResponse:\n" + httpObject);
 		if (httpObject instanceof HttpResponse) {
 
 		} else if (httpObject instanceof HttpContent) {
@@ -107,7 +107,7 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 			} else if (httpObject == LastHttpContent.EMPTY_LAST_CONTENT) {
 				LastHttpContent httpContent = (LastHttpContent) httpObject;
 
-				LOG.info("GOT " + httpContent.content());
+				LOG.info("LAST GOT " + httpContent.content());
 				try {
 					outbuf.close();
 				} catch (IOException e) {
@@ -126,10 +126,7 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 
 	@Override
 	public HttpObject proxyToClientResponse(HttpObject httpObject) {
-		LOG.error("------\nproxyToClientOriginalRequest: "
-				+ originalRequest + "\n URI:"
-				+ originalRequest.getDecoderResult());
-		LOG.error("---\nproxyToClientResponse: " + httpObject);
+		LOG.error("proxyToClientResponse:\n" + httpObject);
 		if (httpObject instanceof HttpResponse) {
 
 		} else if (httpObject instanceof HttpContent) {

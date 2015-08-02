@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.CharsetUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,8 @@ public class RecordingChannelInboundHandlerAdapter extends
 			ByteBufInputStream ibin = new ByteBufInputStream(bb.duplicate());
 			try {
 				IOUtils.copy(ibin, fbos);
+				LOG.debug("Recording-in: "
+						+ bb.duplicate().toString(CharsetUtil.UTF_8));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
