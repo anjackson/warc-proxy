@@ -66,6 +66,11 @@
     <artifactId>jwat-warc</artifactId>
     <version>1.0.3</version>
 </dependency>
+<dependency>
+    <groupId>org.netpreserve.commons</groupId>
+    <artifactId>webarchive-commons</artifactId>
+    <version>1.1.6</version>
+</dependency>
       <dependency>
          <groupId>org.archive.heritrix</groupId>
          <artifactId>heritrix-modules</artifactId>
