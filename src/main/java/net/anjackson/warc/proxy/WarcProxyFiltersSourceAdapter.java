@@ -3,6 +3,7 @@
  */
 package net.anjackson.warc.proxy;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpMethod;
@@ -62,6 +63,7 @@ public class WarcProxyFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			recin = new RecordingChannelInboundHandlerAdapter();
 			// pipeline.addBefore("decoder", "recorder-in", recin);
 			pipeline.addFirst("recorder-in", recin);
+			pipeline.addFirst("simple-recorder-in", new ByteBufInReader());
 		} else {
 			LOG.info("NOT adding recorder-in");
 		}
@@ -83,6 +85,7 @@ public class WarcProxyFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 			e.printStackTrace();
 		}
 		
+		enumhandlers(clientCtx);
 
 		String uri = originalRequest.getUri();
 		// Store the host if this is an SSL CONNECT:
@@ -109,6 +112,14 @@ public class WarcProxyFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 						("Hello " + uri).getBytes());
 			}
 		}
-}
+	}
+
+	public static void enumhandlers(ChannelHandlerContext ctx) {
+		for (String name : ctx.pipeline().names()) {
+			ChannelHandler ch = ctx.pipeline().get(name);
+			System.err.println("handler " + name + ":" + ch);
+		}
+
+	}
 
 }

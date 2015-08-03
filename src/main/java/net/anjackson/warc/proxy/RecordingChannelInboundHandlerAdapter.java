@@ -40,6 +40,7 @@ public class RecordingChannelInboundHandlerAdapter extends
 
 	@Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+		LOG.info("IN-" + ":" + msg + " " + ctx);
 		if (msg instanceof ByteBuf) {
 			ByteBuf bb = (ByteBuf) msg;
 			ByteBufInputStream ibin = new ByteBufInputStream(bb.duplicate());
@@ -60,14 +61,32 @@ public class RecordingChannelInboundHandlerAdapter extends
 
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+		WarcProxyFiltersSourceAdapter.enumhandlers(ctx);
+
 		LOG.info("Recorded-in-readComplete:\n" + new String(getRecordedBytes()));
 		ctx.fireChannelReadComplete();
+	}
+
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		LOG.info("Recorded-in-active:\n" + new String(getRecordedBytes()));
+		WarcProxyFiltersSourceAdapter.enumhandlers(ctx);
+		ctx.fireChannelActive();
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		LOG.info("Recorded-in-inactive:\n" + new String(getRecordedBytes()));
 		ctx.fireChannelInactive();
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+			throws Exception {
+		//
+		cause.printStackTrace();
+		//
+		ctx.fireExceptionCaught(cause);
 	}
 
 	public InputStream getRecordedInputStream() throws IOException {

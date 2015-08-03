@@ -36,6 +36,7 @@ public class RecordingChannelOutboundHandlerAdapter extends
 	}
 
 	public void resetRecorder() throws IOException {
+		LOG.info("Recorded-out-reset:\n" + new String(getRecordedBytes()));
 		fbos.reset();
 	}
 
