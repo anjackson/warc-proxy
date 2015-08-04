@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.littleshoot.proxy.HttpProxyServer;
+import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
-import org.littleshoot.proxy.mitm.HostNameMitmManager;
 import org.littleshoot.proxy.mitm.RootCertificateException;
 
 public class WarcProxy {
@@ -18,8 +18,9 @@ public class WarcProxy {
 		HttpProxyServer server = DefaultHttpProxyServer.bootstrap()
 				.withPort(8080)
 				// for both HTTP and HTTPS
-				.withManInTheMiddle(new HostNameMitmManager())
-				.withListenOnAllAddresses(true).withTransparent(true)
+				.withManInTheMiddle(new SelfSignedMitmManager())
+				// .withManInTheMiddle(new HostNameMitmManager())
+				.withListenOnAllAddresses(true).withTransparent(false)
 				.withFiltersSource(new WarcProxyFiltersSourceAdapter()).start();
 		// OR CertificateSniffingMitmManager
 

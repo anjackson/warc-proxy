@@ -12,7 +12,6 @@ import io.netty.util.AttributeKey;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.jwat.warc.WarcWriter;
@@ -57,33 +56,39 @@ public class WarcProxyFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 
 		ChannelPipeline pipeline = clientCtx.pipeline();
 
-		// Add recorders that capture the raw request and response:
-		if (pipeline.get("recorder-in") == null) {
-			LOG.info("Adding recorder-in...");
-			recin = new RecordingChannelInboundHandlerAdapter();
-			// pipeline.addBefore("decoder", "recorder-in", recin);
-			pipeline.addFirst("recorder-in", recin);
-			pipeline.addFirst("simple-recorder-in", new ByteBufInReader());
-		} else {
-			LOG.info("NOT adding recorder-in");
-		}
-		if (pipeline.get("recorder-out") == null) {
-			LOG.info("Adding recorder-out...");
-			recout = new RecordingChannelOutboundHandlerAdapter();
-			// pipeline.addBefore("encoder", "recorder-out", recout);
-			pipeline.addFirst("recorder-out", recout);
-		} else {
-			LOG.info("NOT adding recorder-out");
-		}
+		//
+		// // Add recorders that capture the raw request and response:
+		// if (pipeline.get("recorder-in") == null) {
+		// LOG.info("Adding recorder-in...");
+		// recin = new RecordingChannelInboundHandlerAdapter();
+		// // pipeline.addBefore("decoder", "recorder-in", recin);
+		// pipeline.addFirst("recorder-in", recin);
+		// pipeline.addFirst("simple-recorder-in", new ByteBufInReader());
+		// } else {
+		// LOG.info("NOT adding recorder-in");
+		// }
+		// if (pipeline.get("recorder-out") == null) {
+		// LOG.info("Adding recorder-out...");
+		// recout = new RecordingChannelOutboundHandlerAdapter();
+		// // pipeline.addBefore("encoder", "recorder-out", recout);
+		// pipeline.addFirst("recorder-out", recout);
+		// } else {
+		// LOG.info("NOT adding recorder-out");
+		// }
+
+		// Remove the decoder!
+		// if (pipeline.get("decoder") != null) {
+		// pipeline.remove("decoder");
+		// }
 
 		//
 		
-		try {
-			recout.resetRecorder();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// recout.resetRecorder();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		
 		enumhandlers(clientCtx);
 
@@ -115,10 +120,12 @@ public class WarcProxyFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 	}
 
 	public static void enumhandlers(ChannelHandlerContext ctx) {
+		System.err.println("----");
 		for (String name : ctx.pipeline().names()) {
 			ChannelHandler ch = ctx.pipeline().get(name);
 			System.err.println("handler " + name + ":" + ch);
 		}
+		System.err.println("----");
 
 	}
 

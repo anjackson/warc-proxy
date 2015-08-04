@@ -5,6 +5,7 @@ package net.anjackson.warc.proxy;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpObject;
@@ -81,6 +82,10 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 		if (httpObject instanceof HttpRequest) {
 			LOG.error("proxyToServerRequest:\n"
 					+ ((HttpRequest) httpObject));
+			HttpRequest r = (HttpRequest) httpObject;
+			// Strip out the via, i.e. act 'transparent'
+			r.headers().remove("Via");
+			LOG.error("proxyToServerRequest:\n" + r);
 		}
 		return null;
 	}
@@ -139,4 +144,28 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 	public void serverToProxyResponseReceived() {
 	}
 
+	@Override
+	public void proxyToServerConnectionSucceeded(ChannelHandlerContext serverCtx) {
+		ChannelPipeline pipeline = serverCtx.pipeline();
+		WarcProxyFiltersSourceAdapter.enumhandlers(serverCtx);
+		if (pipeline.get("recorder-in") == null) {
+			LOG.info("Adding recorder-in...");
+			recin = new RecordingChannelInboundHandlerAdapter();
+			// pipeline.addBefore("decoder", "recorder-in", recin);
+			pipeline.addFirst("recorder-in", recin);
+			// pipeline.addFirst("simple-recorder-in", new ByteBufInReader());
+		} else {
+			LOG.info("NOT adding recorder-in");
+		}
+		if (pipeline.get("recorder-out") == null) {
+			LOG.info("Adding recorder-out...");
+			recout = new RecordingChannelOutboundHandlerAdapter();
+			// pipeline.addBefore("encoder", "recorder-out", recout);
+			pipeline.addFirst("recorder-out", recout);
+		} else {
+			LOG.info("NOT adding recorder-out");
+		}
+		WarcProxyFiltersSourceAdapter.enumhandlers(serverCtx);
+		super.proxyToServerConnectionSucceeded(serverCtx);
+	}
 }
