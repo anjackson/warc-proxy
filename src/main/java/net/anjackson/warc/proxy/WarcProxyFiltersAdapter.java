@@ -152,7 +152,11 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 			LOG.info("Adding recorder-in...");
 			recin = new RecordingChannelInboundHandlerAdapter();
 			// pipeline.addBefore("decoder", "recorder-in", recin);
-			pipeline.addFirst("recorder-in", recin);
+			if (pipeline.get("ssl") != null) {
+				pipeline.addAfter("ssl", "recorder-in", recin);
+			} else {
+				pipeline.addFirst("recorder-in", recin);
+			}
 			// pipeline.addFirst("simple-recorder-in", new ByteBufInReader());
 		} else {
 			LOG.info("NOT adding recorder-in");
@@ -160,8 +164,11 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 		if (pipeline.get("recorder-out") == null) {
 			LOG.info("Adding recorder-out...");
 			recout = new RecordingChannelOutboundHandlerAdapter();
-			// pipeline.addBefore("encoder", "recorder-out", recout);
-			pipeline.addFirst("recorder-out", recout);
+			if (pipeline.get("ssl") != null) {
+				pipeline.addAfter("ssl", "recorder-out", recout);
+			} else {
+				pipeline.addFirst("recorder-out", recout);
+			}
 		} else {
 			LOG.info("NOT adding recorder-out");
 		}

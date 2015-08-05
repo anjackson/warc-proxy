@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import org.jwat.warc.WarcWriter;
 import org.jwat.warc.WarcWriterFactory;
 import org.littleshoot.proxy.HttpFilters;
-import org.littleshoot.proxy.HttpFiltersAdapter;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 
 /**
@@ -99,7 +98,9 @@ public class WarcProxyFiltersSourceAdapter extends HttpFiltersSourceAdapter {
 				String prefix = "https://" + uri.replaceFirst(":443", "");
 				clientCtx.channel().attr(CONNECTED_URL).set(prefix);
 			}
-			return new HttpFiltersAdapter(originalRequest, clientCtx);
+			return new WarcProxyFiltersAdapter(originalRequest, clientCtx, uri,
+					ww, recin, recout);
+			// return new HttpFiltersAdapter(originalRequest, clientCtx);
 		} else {
 			// Re-build the url if this is from an SSL connection:
 			String connectedUrl = clientCtx.channel().attr(CONNECTED_URL).get();

@@ -8,7 +8,6 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
-import io.netty.util.CharsetUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,8 +46,8 @@ public class RecordingChannelOutboundHandlerAdapter extends
 			ByteBuf bb = (ByteBuf) msg;
 			ByteBufInputStream ibin = new ByteBufInputStream(bb.duplicate());
 			IOUtils.copy(ibin, fbos);
-			LOG.debug("Recording-in: "
-					+ bb.duplicate().toString(CharsetUtil.UTF_8));
+			// LOG.debug("Recording-in: "
+			// + bb.duplicate().toString(CharsetUtil.UTF_8));
 		} else {
 			LOG.info("OTHER-OUT-:" + msg);
 		}

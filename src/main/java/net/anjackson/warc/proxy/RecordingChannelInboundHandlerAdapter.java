@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.CharsetUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,8 +45,8 @@ public class RecordingChannelInboundHandlerAdapter extends
 			ByteBufInputStream ibin = new ByteBufInputStream(bb.duplicate());
 			try {
 				IOUtils.copy(ibin, fbos);
-				LOG.debug("Recording-in: "
-						+ bb.duplicate().toString(CharsetUtil.UTF_8));
+				// LOG.debug("Recording-in: "
+				// + bb.duplicate().toString(CharsetUtil.UTF_8));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -67,28 +66,6 @@ public class RecordingChannelInboundHandlerAdapter extends
 		ctx.fireChannelReadComplete();
 	}
 
-	@Override
-	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		LOG.info("Recorded-in-active:\n" + new String(getRecordedBytes()));
-		WarcProxyFiltersSourceAdapter.enumhandlers(ctx);
-		ctx.fireChannelActive();
-	}
-
-	@Override
-	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		LOG.info("Recorded-in-inactive:\n" + new String(getRecordedBytes()));
-		ctx.fireChannelInactive();
-	}
-
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-			throws Exception {
-		//
-		cause.printStackTrace();
-		//
-		ctx.fireExceptionCaught(cause);
-	}
-
 	public InputStream getRecordedInputStream() throws IOException {
 		return this.fbos.asByteSource().openBufferedStream();
 	}
@@ -97,6 +74,17 @@ public class RecordingChannelInboundHandlerAdapter extends
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		IOUtils.copy(getRecordedInputStream(), output);
 		return output.toByteArray();
+	}
+
+	/**
+	 * Finaliser to ensure any temp files are closed for release.
+	 */
+	protected void finalize() throws Throwable {
+		try {
+			fbos.close();
+		} finally {
+			super.finalize();
+		}
 	}
 
 }
