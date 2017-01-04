@@ -3,17 +3,8 @@
  */
 package net.anjackson.warc.proxy;
 
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
-import io.netty.handler.codec.http.DefaultHttpContent;
-import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpObject;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.LastHttpContent;
-
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +18,16 @@ import org.jwat.warc.WarcWriter;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import com.google.common.io.FileBackedOutputStream;
+
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.http.DefaultHttpContent;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.LastHttpContent;
 
 /**
  * @author Andrew Jackson <Andrew.Jackson@bl.uk>
@@ -175,4 +176,64 @@ public class WarcProxyFiltersAdapter extends HttpFiltersAdapter {
 		WarcProxyFiltersSourceAdapter.enumhandlers(serverCtx);
 		super.proxyToServerConnectionSucceeded(serverCtx);
 	}
+
+    @Override
+    public void proxyToServerRequestSending() {
+        LOG.info("Server request sending.");
+    }
+
+    @Override
+    public void proxyToServerRequestSent() {
+        LOG.info("Server request sent.");
+    }
+
+    @Override
+    public void serverToProxyResponseTimedOut() {
+        LOG.info("Server response timed out.");
+    }
+
+    @Override
+    public void serverToProxyResponseReceiving() {
+        LOG.info("Server response receiving.");
+    }
+
+    @Override
+    public void proxyToServerConnectionQueued() {
+        LOG.info("Server connection queued.");
+    }
+
+    @Override
+    public InetSocketAddress proxyToServerResolutionStarted(
+            String resolvingServerHostAndPort) {
+        LOG.info("Server DNS resolution started.");
+        return super.proxyToServerResolutionStarted(resolvingServerHostAndPort);
+    }
+
+    @Override
+    public void proxyToServerResolutionFailed(String hostAndPort) {
+        LOG.info("DNS failure not currently recorded for " + hostAndPort);
+    }
+
+    @Override
+    public void proxyToServerResolutionSucceeded(String serverHostAndPort,
+            InetSocketAddress resolvedRemoteAddress) {
+        LOG.info("DNS success not currently recorded for " + serverHostAndPort
+                + " " + resolvedRemoteAddress);
+    }
+
+    @Override
+    public void proxyToServerConnectionStarted() {
+        LOG.info("Server connection started.");
+    }
+
+    @Override
+    public void proxyToServerConnectionSSLHandshakeStarted() {
+        LOG.info("Server connection SSL HandshakeStarted.");
+    }
+
+    @Override
+    public void proxyToServerConnectionFailed() {
+        LOG.info("Server connection failed not currently recorded.");
+    }
+
 }

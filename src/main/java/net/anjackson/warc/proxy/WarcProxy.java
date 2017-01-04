@@ -6,21 +6,20 @@ import org.apache.log4j.Logger;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.extras.SelfSignedMitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
-import org.littleshoot.proxy.mitm.RootCertificateException;
 
 public class WarcProxy {
 	private static Logger LOG = Logger.getLogger(WarcProxy.class.getName());
 
-	public static void main(String[] args) throws RootCertificateException,
+    public static void main(String[] args) throws
 			IOException {
 
-		// TODO Auto-generated method stub
+        // Start up a suitable proxy:
 		HttpProxyServer server = DefaultHttpProxyServer.bootstrap()
-				.withPort(8080)
+                .withPort(28080)
 				// for both HTTP and HTTPS
 				.withManInTheMiddle(new SelfSignedMitmManager())
 				// .withManInTheMiddle(new HostNameMitmManager())
-				.withListenOnAllAddresses(true).withTransparent(false)
+                .withTransparent(false)
 				.withFiltersSource(new WarcProxyFiltersSourceAdapter()).start();
 		// OR CertificateSniffingMitmManager
 
